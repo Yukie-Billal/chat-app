@@ -1,0 +1,161 @@
+<script setup>
+import {useChatStore} from "./stores/chat.js";
+import {useUserStore} from "./stores/user.js";
+import {ref, watch} from "vue";
+import Login from "./components/Login.vue";
+import io from 'socket.io-client'
+
+import {socket} from './stores/socket.js'
+const chatStore = useChatStore()
+const userStore = useUserStore()
+
+const message = ref('')
+
+function sendChat(e) {
+   e.preventDefault()
+   try {
+      checkAuth()
+      if (message.value.length < 1) {
+         throw new Error('message cannot be null')
+      }
+      const user = useUserStore()
+      const chatId = chatStore.chats.length - 1 + 1 > 0 ? chatStore.chats[chatStore.chats.length - 1].id + 1 : 1
+
+      const payload = {
+         id: chatId,
+         chat: message.value,
+         userid: user.user.id,
+         username: user.user.username
+      }
+      socket.emit('chat message', payload)
+      message.value = ''
+   } catch (e) {
+      alert(e)
+   }
+}
+
+function checkAuth() {
+   if (userStore.user.id === 0) {
+      userStore.isRegistered = false
+      return false
+   }
+   return true
+}
+
+function clearChat(e) {
+   e.preventDefault()
+   chatStore.chats = []
+}
+
+socket.on('chat message', (chat) => {
+   chatStore.chats.push(chat)
+   const chatBox = document.querySelector('#chat-content')
+   setTimeout(() => {
+      chatBox.scrollTop = chatBox.scrollHeight - Math.ceil(window.innerHeight*(80/100))
+   }, 200)
+   if ((chat.userid !== userStore.user.id && chat.userid !== 0) || (!chat.chat.includes(userStore.user.username) && chat.userid === 0 )) playAudio()
+})
+
+const playAudio = (timeout=4000) => {
+   const audioplayer = document.querySelector('#audioplayer')
+   clearTimeout('*')
+   audioplayer.play()
+   setTimeout(() => {
+      audioplayer.pause()
+   }, timeout)
+}
+</script>
+
+<template>
+   <div id="chat" v-if="userStore.isRegistered">
+      <ul id="chat-content">
+         <li v-for="(chat, i) in chatStore.chats" :key="chat.id || i">
+            <div id="chat-wrap"
+                 :class="{'right': chat.userid===userStore.user.id, 'left': chat.userid!==userStore.user.id && chat.userid!==0, 'center': chat.userid===0}">
+               <span>
+               {{ chat.chat }}
+               </span>
+               <p class="author" :class="chat.userid === 0 || chat.userid === userStore.user.id ? 'hidden' :''">{{chat.username}}</p>
+            </div>
+         </li>
+      </ul>
+      <div id="input">
+         <form @submit="sendChat">
+            <input type="text" name="input" v-model="message">
+            <button @click="">Say</button>
+         </form>
+         <div>
+            <button @click="clearChat">Clear chat</button>
+         </div>
+      </div>
+   </div>
+   <Login v-else />
+   <audio controls id="audioplayer" hidden>
+      <source src="https://github.com/petanikode/belajar-html/raw/master/audio/Ngoni.mp3" type="audio/mpeg">
+      Browsermu tidak mendukung tag audio, upgrade donk!
+   </audio>
+</template>
+
+<style scoped>
+.hidden {
+   display: none;
+}
+.left {
+   text-align: left;
+}
+
+.right {
+   text-align: right;
+}
+
+.center {
+   text-align: center;
+}
+.author {
+   font-size: 14px;
+   padding: 2px 0 0 6px;
+}
+div#chat {
+   width: 30vw;
+   height: 100vh;
+}
+div#chat>ul {
+   padding: 2rem;
+   list-style: none;
+   height: 80vh;
+   max-height: 80vh;
+   overflow-y: auto;
+   color: white;
+}
+
+div#chat>ul>li {
+   width: 100%;
+   margin: 10px 0;
+}
+div#chat>ul>li>#chat-wrap {
+   max-width: 100%;
+   word-wrap: break-word;
+}
+div#chat>ul>li>#chat-wrap>span {
+   text-align: left;
+   display: inline-block;
+   max-width: 100%;
+   background-color: #1a1a1a;
+   padding: .6em .8em;
+   border-radius: 6px;
+}
+
+div#input {
+   margin-top: 12px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 100%;
+   height: 10vh;
+   max-height: 10vh;
+}
+
+div#input form * {
+   margin: 0 3px;
+}
+</style>
