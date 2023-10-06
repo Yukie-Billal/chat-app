@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('join chat', async (user) => {
-    console.log(socket.id)
+    io.emit('online user')
     const chat = {
       id: Math.floor(Math.random() * 20),
       chat: `${user.username} has joined chat`,
@@ -60,11 +60,11 @@ io.on('connection', (socket) => {
       console.log(e)
     }
   })
-  
+
   socket.on('disconnect', async () => {
     console.log(socket.id)
     await UsersModel.removeSocketId(socket.id)
-    io.emit('update online user')
+    io.emit('online user')
     console.log('A client disconnected.\n');
   });
 })
