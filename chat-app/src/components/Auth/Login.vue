@@ -1,12 +1,11 @@
 <script setup>
 import {ref} from "vue";
-import {useUserStore} from "../stores/user.js";
-import {socket} from "../stores/socket.js";
-import {extractWords} from "../utils/string-escape.js";
+import {useUserStore} from "../../stores/user.js";
+import {socket} from "../../stores/socket.js";
+import {extractWords} from "../../utils/string-escape.js";
+import LoginInput from "./LoginInput.vue";
 
 const userStore = useUserStore()
-
-const username = ref('')
 
 const haveAccount = ref(true)
 const buttonText = ref('Login')
@@ -31,15 +30,24 @@ async function handleSubmit (e) {
          alert("Mas bro mencoba jail")
          throw new Error('Please use name')
       }
+      const payload = JSON.stringify({
+         username: username.value,
+         email: email.value,
+         password: password.value
+      })
       const option = {
          method: 'POST',
          headers: {"Content-Type": 'application/json'},
-         body: JSON.stringify({username: username.value})
+         body: payload
       }
       let response
       if (haveAccount.value) {
          response = await fetch('http://192.168.100.10:3000/users/auth', option)
       } else {
+         if (password !== confirmPassword) {
+            alert('Password not match')
+            throw new Error('Invalid password')
+         }
          response = await fetch('http://192.168.100.10:3000/users', option)
       }
       if (response.status > 400) throw new Error('Invalid username or password')
@@ -55,12 +63,20 @@ async function handleSubmit (e) {
    }
 }
 
+
+const email = ref('')
+const username = ref('')
+const password = ref('')
+const confirmPassword = ref('')
 </script>
 
 <template>
     <div id="auth-wrapper">
        <form @submit="handleSubmit">
-          <input type="text" v-model="username" placeholder="Your username">
+          <LoginInput name="email" label="Your email" placeholder="example@gmail.com" error-message="Invalid email" @input="v => email=v" />
+          <LoginInput name="username" label="Your username" placeholder="example" error-message="Invalid username" @input="v => username=v" />
+          <LoginInput type="password" name="password" label="Your password" placeholder="****" error-message="Invalid password" @input="v => password=v" />
+          <LoginInput type="password" v-if="!haveAccount" name="confirm-password" label="Confirm Password" placeholder="example@gmail.com" error-message="Invalid password" @type="v => confirmPassword=v" />
           <button>{{buttonText}}</button>
        </form>
        <a style="cursor:pointer;" @click="reverseSubmit">{{linkText}}</a>
@@ -71,13 +87,18 @@ async function handleSubmit (e) {
 #auth-wrapper {
    height: 100vh;
    max-height: 100vh;
+   min-width: 40vh;
    display: flex;
    flex-direction: column;
    align-items: center;
    justify-content: center;
+   padding: 0 32px;
 }
 button {
-   margin: 0 6px;
+   width: 100%;
+}
+form {
+   width: 100%;
 }
 a {
    display: inline-block;

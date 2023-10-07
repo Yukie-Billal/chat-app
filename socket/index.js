@@ -35,13 +35,9 @@ app.use('/users', UserRouter)
 const connectedUser = new Set()
 const UsersModel = require('./models/user')
 io.on('connection', (socket) => {
-  console.log('a client connected')
+  console.log('a client connected id: '+socket.id)
   connectedUser.add(socket.id)
-  console.log(socket)
-  console.log(socket.id)
-  console.log('\n')
   socket.on('chat message', (chat) => {
-    console.log(chat)
     io.emit('chat message', chat)
   })
 

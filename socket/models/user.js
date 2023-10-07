@@ -1,16 +1,4 @@
-const mysql = require('mysql2')
-
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "chat-app"
-})
-
-connection.connect(err => {
-  if (err) throw err
-  console.log("Connection to mysql database")
-})
+const connection = require('./connection')
 
 const Users = {
   getAllUsers: () => {
@@ -21,9 +9,9 @@ const Users = {
       })
     })
   },
-  registerUser: (username, password=null, name) => {
+  registerUser: (username, password=null, email, name) => {
     return new Promise((resolve, reject) => {
-      connection.query('INSERT INTO users VALUES (null, ?, ?, ?)', [username, password, name],(err, result) => {
+      connection.query('INSERT INTO users VALUES (null, ?, ?, ?, ?, null)', [username, password, email, name],(err, result) => {
         if (err) throw err
         resolve(result)
       })

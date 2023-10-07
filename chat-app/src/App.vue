@@ -2,10 +2,11 @@
 import {useChatStore} from "./stores/chat.js";
 import {useUserStore} from "./stores/user.js";
 import {ref, watch} from "vue";
-import Login from "./components/Login.vue";
+import Login from "./components/Auth/Login.vue";
 import io from 'socket.io-client'
 
 import {socket} from './stores/socket.js'
+import ChatMessage from "./components/ChatMessage.vue";
 const chatStore = useChatStore()
 const userStore = useUserStore()
 
@@ -71,13 +72,7 @@ const playAudio = () => {
    <div id="chat" v-if="userStore.isRegistered">
       <ul id="chat-content">
          <li v-for="(chat, i) in chatStore.chats" :key="chat.id || i">
-            <div id="chat-wrap"
-                 :class="{'right': chat.userid===userStore.user.id, 'left': chat.userid!==userStore.user.id && chat.userid!==0, 'center': chat.userid===0}">
-               <span>
-               {{ chat.chat }}
-               </span>
-               <p class="author" :class="chat.userid === 0 || chat.userid === userStore.user.id ? 'hidden' :''">{{chat.username}}</p>
-            </div>
+            <ChatMessage :chat="chat" />
          </li>
       </ul>
       <div id="input">
@@ -91,35 +86,17 @@ const playAudio = () => {
       </div>
       <div id="user-list">
          <ul v-for="(user, i) in userStore.users" :key="user.id || i" class="user-list-wrapper">
-            <li><span class="username">{{user.username}}</span> <span :class="{'online': user.socket_id!==null, 'offline':user.socket_id===null}"></span> </li>
+            <li><span class="username">{{user.username}}</span> <span :class="user.socket_id ? 'online' : 'offline'"></span> </li>
          </ul>
       </div>
    </div>
    <Login v-else />
    <audio id="audioplayer" hidden>
-      <source src="/mixkit-achievement-bell-600.mp3" type="audio/mp3" >
+      <source src="/mixkit-achievement-bell-600.mp3" type="audio/mp3">
    </audio>
 </template>
 
 <style scoped>
-.hidden {
-   display: none;
-}
-.left {
-   text-align: left;
-}
-
-.right {
-   text-align: right;
-}
-
-.center {
-   text-align: center;
-}
-.author {
-   font-size: 14px;
-   padding: 2px 0 0 6px;
-}
 div#chat {
    width: 30vw;
    height: 100vh;
@@ -136,18 +113,6 @@ div#chat>ul {
 div#chat>ul>li {
    width: 100%;
    margin: 10px 0;
-}
-div#chat>ul>li>#chat-wrap {
-   max-width: 100%;
-   word-wrap: break-word;
-}
-div#chat>ul>li>#chat-wrap>span {
-   text-align: left;
-   display: inline-block;
-   max-width: 100%;
-   background-color: #1a1a1a;
-   padding: .6em .8em;
-   border-radius: 6px;
 }
 
 div#input {
