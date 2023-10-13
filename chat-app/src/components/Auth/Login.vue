@@ -4,6 +4,7 @@ import {useUserStore} from "../../stores/user.js";
 import {socket} from "../../stores/socket.js";
 import {extractWords} from "../../utils/string-escape.js";
 import LoginInput from "./LoginInput.vue";
+import {config} from "../../utils/config.js";
 
 const userStore = useUserStore()
 
@@ -42,13 +43,13 @@ async function handleSubmit (e) {
       }
       let response
       if (haveAccount.value) {
-         response = await fetch('http://192.168.100.10:3000/users/auth', option)
+         response = await fetch(`${config.api_url}/users/auth`, option)
       } else {
-         if (password !== confirmPassword) {
-            alert('Password not match')
+         if (password.value !== confirmPassword.value) {
+            alert('Password not match: ' + `${password.value}:${confirmPassword.value}`)
             throw new Error('Invalid password')
          }
-         response = await fetch('http://192.168.100.10:3000/users', option)
+         response = await fetch(`${config.api_url}/users`, option)
       }
       if (response.status > 400) throw new Error('Invalid username or password')
       const data = await response.json()
@@ -75,8 +76,8 @@ const confirmPassword = ref('')
        <form @submit="handleSubmit">
           <LoginInput name="email" label="Your email" placeholder="example@gmail.com" error-message="Invalid email" @input="v => email=v" />
           <LoginInput name="username" label="Your username" placeholder="example" error-message="Invalid username" @input="v => username=v" />
-          <LoginInput type="password" name="password" label="Your password" placeholder="****" error-message="Invalid password" @input="v => password=v" />
-          <LoginInput type="password" v-if="!haveAccount" name="confirm-password" label="Confirm Password" placeholder="example@gmail.com" error-message="Invalid password" @type="v => confirmPassword=v" />
+          <LoginInput type="password" name="password" label="Your password" placeholder="Password" error-message="Invalid password" @input="v => password=v" />
+          <LoginInput type="password" v-if="!haveAccount" name="confirm-password" label="Confirm Password" placeholder="Confirm password" error-message="Invalid password" @input="v => confirmPassword=v" />
           <button>{{buttonText}}</button>
        </form>
        <a style="cursor:pointer;" @click="reverseSubmit">{{linkText}}</a>

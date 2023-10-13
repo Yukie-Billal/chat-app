@@ -3,7 +3,7 @@ import {useUserStore} from "../stores/user.js";
 
 const userStore = useUserStore()
 
-defineProps(['chat'])
+defineProps(['chat', 'showAuthor'])
 </script>
 
 <template>
@@ -13,8 +13,8 @@ defineProps(['chat'])
       'left': chat.userid!==userStore.user.id && chat.userid!==0,
       'center capital': chat.userid===0
    }">
+      <p class="author" :class="showAuthor ? 'hidden' :''">{{ chat.username }}</p>
       <span>{{ chat.chat }}</span>
-      <p class="author" :class="chat.userid === 0 || chat.userid === userStore.user.id ? 'hidden' :''">{{ chat.username }}</p>
    </div>
 </template>
 

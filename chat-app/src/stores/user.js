@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import {config} from "../utils/config.js";
 
 export const useUserStore = defineStore('user', {
   state: () => {
@@ -13,7 +14,7 @@ export const useUserStore = defineStore('user', {
   },
   actions: {
      async fetchAllUsers() {
-       const response = await fetch('http://192.168.100.10:3000/users')
+       const response = await fetch(`${config.api_url}/users`)
        this.users = await response.json()
     }
   }
