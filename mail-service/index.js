@@ -1,43 +1,55 @@
-const express = require('express')
+// #region initial import
+import bodyParser from "body-parser";
+import cors from 'cors'
+import {config} from 'dotenv'
+import express from 'express'
+import nodemailer from 'nodemailer'
+// #endregion
+
+
+// #region app config & initial
 const app = express()
-const bodyParser = require('body-parser')
-const cors = require('cors')
+config()
 
 app.use(cors())
 app.use(bodyParser.json())
-const nodemailer = require('nodemailer')
 const transporter = nodemailer.createTransport({
-    port: 465,
-    host: 'smtp.gmail.com',
+    port: parseInt(process.env.MAIL_PORT),
+    host: process.env.MAIL_HOST,
     auth: {
-        user: 'yukiembillal01@gmail.com',
-        pass: 'csct oast sxqd qtbr'
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
     },
     secure: true
+})
+// #endregion
+
+// #region endpoint api
+app.get('/test-service', (req, res) => {
+    res.json({"message": "Testing service email"})
 })
 
 app.post('/mails/send-verify', (req, res) => {
     const {to, otp} = req.body
-    res.json({to, otp})
-    // const mailData = {
-    //     from: 'yukiembillal@gmail.com',
-    //     to: to,
-    //     subject: 'Dont hate yourself',
-    //     text: `http://192.168.18.90:3000/mail/verify/${to}/${otp}`,
-    //     html: `<a href="http://192.168.18.90:3000/mail/verify/${to}/${otp}">Verify gmail.</a>`
-    // }
-    // let message = ''
-    // transporter.sendMail(mailData, (err, info) => {
-    //     message += 'Hello'
-    //     console.log(err, info, "IIIIIIINNNNN", message)
-    //     if (err) {
-    //         console.log(err)
-    //         return false
-    //     }
-    // })
-    // res.send(message + "World")
+    const mailData = {
+        from: process.env.MAIL_USER,
+        to: to,
+        subject: 'Verification Register Chat app',
+        text: `http://192.168.18.90:3000/users/mail/verify/${to}/${otp}`,
+        html: `<a href="http://192.168.18.90:3000/users/mail/verify/${to}/${otp}">Verify your chat app account gmail</a>`
+    }
+    let message = ''
+    transporter.sendMail(mailData, (err, info) => {
+        message += 'Hello '
+        console.log(err, info, "IIIIIIINNNNN", message)
+        if (err) {
+            console.log(err)
+            res.json({error: err})
+        }
+    })
+    res.send(message + "World")
 })
 
-app.listen(5000, '0.0.0.0', () => {
-    console.log('berjalan di port 5000')
+app.listen(parseInt(process.env.PORT), process.env.HOSTNAME, () => {
+    console.log(`Aplikasi berjalan pada ${process.env.HOSTNAME}:${process.env.PORT}`)
 })

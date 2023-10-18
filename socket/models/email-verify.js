@@ -4,7 +4,7 @@ const EmailVerify = {
   getAll() {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM email_verification', (err, result) => {
-        if (err) throw err
+        if (err) reject(err)
         resolve(result)
       })
     })
@@ -15,7 +15,7 @@ const EmailVerify = {
           'INSERT INTO email_verification VALUES (?, ?, ?, ?, ?)',
           [email, OTP, ip, date, new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() + 1)],
           (err, result) => {
-            if (err) throw err
+            if (err) reject(err)
             resolve(result)
           })
     })
@@ -23,7 +23,16 @@ const EmailVerify = {
   getByEmail(email) {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM email_verification WHERE email = ?', [email], (err, result) => {
-        if (err) throw err
+        if (err) reject(err)
+        resolve(result)
+      })
+    })
+  },
+  deleteEmailVerify(otp) {
+    return new Promise((resolve, reject) => {
+      const sql = 'DELETE FROM email_verification WHERE otp_password = ?'
+      connection.query(sql, [otp], (err, result) => {
+        if (err) reject(err)
         resolve(result)
       })
     })

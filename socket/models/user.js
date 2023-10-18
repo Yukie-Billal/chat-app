@@ -9,9 +9,9 @@ const Users = {
       })
     })
   },
-  registerUser: (username, password=null, email, name) => {
+  registerUser: (username, password=null, email, name, socketId) => {
     return new Promise((resolve, reject) => {
-      connection.query('INSERT INTO users VALUES (null, ?, null, null, ?, null)', [username, name],(err, result) => {
+      connection.query('INSERT INTO users VALUES (null, ?, ?, ?, ?, ?, null)', [username, password, email, name, socketId],(err, result) => {
         if (err) reject(err)
         resolve(result)
       })
@@ -52,6 +52,15 @@ const Users = {
   removeSocketId(socketId) {
     return new Promise((resolve, reject) => {
       connection.query('UPDATE users SET socket_id=null WHERE socket_id=?', [socketId], (err, result) => {
+        if (err) reject(err)
+        resolve(result)
+      })
+    })
+  },
+  setEmailStatus(status) {
+    return new Promise((resolve, reject) => {
+      const sql = 'UPDATE users SET email_status = ?'
+      connection.query(sql, [status], (err, result) => {
         if (err) reject(err)
         resolve(result)
       })

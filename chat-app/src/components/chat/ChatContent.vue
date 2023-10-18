@@ -3,6 +3,7 @@ import ChatMessage from "../ChatMessage.vue"
 import {useChatStore} from "../../stores/chat.js"
 import {useUserStore} from "../../stores/user.js"
 import {socket} from "../../stores/socket.js";
+import {playAudio} from "../../utils/AudioNotification.js";
 const chatStore = useChatStore()
 const userStore = useUserStore()
 
@@ -11,7 +12,7 @@ socket.on('chat message', (chat) => {
    const chatBox = document.querySelector('#chat-content')
    setTimeout(() => {
       chatBox.scrollTop = chatBox.scrollHeight - Math.ceil(window.innerHeight*(80/100))
-   }, 200)
+   }, 100)
    if ((chat.userid !== userStore.user.id && chat.userid !== 0) || (!chat.chat.includes(userStore.user.username) && chat.userid === 0 )) playAudio()
 })
 

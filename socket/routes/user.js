@@ -1,10 +1,10 @@
 const express = require('express')
-const router =  express.Router()
+const router = express.Router()
 const UserModel = require('../models/user')
 const EmailVerifyModel = require('../models/email-verify')
-const generateOTP = require('../utils/generate-otp')
-const http = require("http");
+
 const create_log = require("../utils/create-logs");
+const sendMailVerify = require("../utils/send-mail-verify");
 
 router.get('/', async (req, res) => {
   try {
@@ -19,28 +19,15 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const {email, username, password} = req.body
-    const user = await UserModel.registerUser(username, password, email, username)
+    const {email = 'userwith.immortal@gmail.com', username, password, socketId} = req.body
+    const user = await UserModel.registerUser(username, password, email, username, socketId)
+    const {emailVerify} = sendMailVerify(req, email)
 
-    // const OTP = generateOTP()
-    // const emailVerify = await EmailVerifyModel.createEmailVerify(email, OTP, req.ip, new Date())
-
-    // const debugText = `To: ${email}`
-    // const mailPayload = {
-    //   to: 'userwith.immortal@gmail.com',
-    //   subject: 'Email verification' + debugText
-    // }
-    // fetch('http://192.168.18.90:5000/mails/send-verify', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({to: email, otp:OTP})})
-    //     .then(res => res.json())
-    //     .then(data => console.log(data))
-    //     .catch(err => {
-    //       console.log("Err dimana fetch:", err)
-    //     })
-    // res.json("Waiting")
-    // if (!!user.insertId || !!emailVerify.insertId) {
-    if (!!user.insertId) {
-      const userById = await UserModel.getUserById(user.insertId)
-      res.json(userById)
+    if (!!user.insertId || !!emailVerify.insertId) {
+      if (!!user.insertId) {
+        const userById = await UserModel.getUserById(user.insertId)
+        res.json(userById)
+      }
     }
   } catch (e) {
     console.log(e)
@@ -79,13 +66,15 @@ router.delete('/:id', async (req, res) => {
 
 router.get('/mail/verify/:email/:otp', async (req, res) => {
   try {
+    console.log("\nVerifikasi email berhasil digapai\n")
     const {email, otp} = req.params
     const checkEmail = await EmailVerifyModel.getByEmail(email)
-    console.log(checkEmail)
-    if (checkEmail.email === email && otp === checkEmail.otp_password===otp) {
-      res.json({message:"Success"})
+    if (checkEmail[0].email === email && checkEmail[0].otp_password === otp) {
+      await EmailVerifyModel.deleteEmailVerify(otp)
+      await UserModel.setEmailStatus('verify')
+      res.json({message: "Success"})
     } else {
-      res.json({message:"Failed"})
+      res.json({message: "Failed"})
     }
   } catch (e) {
     console.log(e)

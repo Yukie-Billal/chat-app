@@ -55,7 +55,6 @@ io.on('connection', (socket) => {
 
   socket.on('join chat', async (user) => {
     try {
-      io.emit('online user')
       const chat = {
         id: Math.floor(Math.random() * 20),
         chat: `${user.username} has joined chat`,
@@ -63,6 +62,7 @@ io.on('connection', (socket) => {
       }
       io.emit('chat message', chat)
       await UsersModel.setActiveUser(socket.id, user.id)
+      io.emit('online user')
       return false
     } catch (e) {
       console.log(e)

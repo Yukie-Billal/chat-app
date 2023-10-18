@@ -1,24 +1,21 @@
 <script setup>
+import './login.css'
 import {ref} from "vue";
-import {useUserStore} from "../../stores/user.js";
-import {socket} from "../../stores/socket.js";
-import {extractWords} from "../../utils/string-escape.js";
-import LoginInput from "./LoginInput.vue";
-import {config} from "../../utils/config.js";
-
+import {extractWords} from "../../utils/string-escape.js"
+import LoginInput from "./LoginInput.vue"
+import {useUserStore} from "../../stores/user.js"
 const userStore = useUserStore()
 
 const haveAccount = ref(true)
-const buttonText = ref('Login')
-const linkText = ref('Registered')
+const buttonText = ref('Sign In')
+const linkText = ref('Create Account')
 
 const reverseSubmit = () => {
+   buttonText.value = 'Sign In'
+   linkText.value = 'Create account'
    if (haveAccount.value) {
-      buttonText.value = 'Registered'
-      linkText.value = 'Login'
-   } else {
-      buttonText.value = 'Login'
-      linkText.value = 'Registered'
+      buttonText.value = 'Create Account'
+      linkText.value = 'Sign In'
    }
    haveAccount.value = !haveAccount.value
 }
@@ -26,36 +23,8 @@ const reverseSubmit = () => {
 async function handleSubmit (e) {
    e.preventDefault()
    try {
-      username.value = extractWords(username.value)
-      if (username.value.length < 3) {
-         alert("Mas bro mencoba jail")
-         throw new Error('Please use name')
-      }
-      const payload = JSON.stringify({
-         username: username.value,
-         email: email.value,
-         password: password.value
-      })
-      const option = {
-         method: 'POST',
-         headers: {"Content-Type": 'application/json'},
-         body: payload
-      }
-      let response
-      if (haveAccount.value) {
-         response = await fetch(`${config.api_url}/users/auth`, option)
-      } else {
-         if (password.value !== confirmPassword.value) {
-            alert('Password not match: ' + `${password.value}:${confirmPassword.value}`)
-            throw new Error('Invalid password')
-         }
-         response = await fetch(`${config.api_url}/users`, option)
-      }
-      if (response.status > 400) throw new Error('Invalid username or password')
-      const data = await response.json()
-      userStore.isRegistered = true
-      userStore.user = data[0]
-      socket.emit('join chat', userStore.user)
+      if (email.value.length < 5) throw new Error("Invalid email")
+      await userStore.doAuth(extractWords(username.value), password.value, confirmPassword.value, email.value, haveAccount.value)
    } catch (e) {
       console.log(e)
       console.error(e)
@@ -63,7 +32,6 @@ async function handleSubmit (e) {
       userStore.authError = e.message
    }
 }
-
 
 const email = ref('')
 const username = ref('')
@@ -73,6 +41,9 @@ const confirmPassword = ref('')
 
 <template>
     <div id="auth-wrapper">
+       <div v-if="'authError' in userStore" class="p-4 w-full bg-red-500 rounded">
+         {{userStore.authError}}
+       </div>
        <form @submit="handleSubmit">
           <LoginInput name="email" label="Your email" placeholder="example@gmail.com" error-message="Invalid email" @input="v => email=v" />
           <LoginInput name="username" label="Your username" placeholder="example" error-message="Invalid username" @input="v => username=v" />
@@ -89,17 +60,7 @@ const confirmPassword = ref('')
    height: 100vh;
    max-height: 100vh;
    min-width: 40vh;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: center;
    padding: 0 32px;
-}
-button {
-   width: 100%;
-}
-form {
-   width: 100%;
 }
 a {
    display: inline-block;
