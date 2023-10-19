@@ -1,0 +1,6 @@
+
+Thu Oct 19 2023 02:34:42 GMT+0700 (Western Indonesia Time) :Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+Thu Oct 19 2023 03:00:18 GMT+0700 (Western Indonesia Time) :TypeError: Cannot read properties of undefined (reading 'email')
+Thu Oct 19 2023 03:10:10 GMT+0700 (Western Indonesia Time) :Error: Column count doesn't match value count at row 1
+Thu Oct 19 2023 03:10:30 GMT+0700 (Western Indonesia Time) :Error: Column count doesn't match value count at row 1
+Thu Oct 19 2023 03:13:15 GMT+0700 (Western Indonesia Time) :Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '* FROM email_verification WHERE otp_password = 'userwith.immortal@gmail.com'' at line 1

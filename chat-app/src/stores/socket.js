@@ -1,3 +1,4 @@
 import io from "socket.io-client";
+import {config} from '../utils/config.js'
 
-export const socket = io('http://192.168.100.10:3000')
+export const socket = io(config.socket_url)

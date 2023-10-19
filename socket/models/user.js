@@ -1,30 +1,18 @@
-const mysql = require('mysql2')
-
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "chat-app"
-})
-
-connection.connect(err => {
-  if (err) throw err
-  console.log("Connection to mysql database")
-})
+const connection = require('./connection')
 
 const Users = {
   getAllUsers: () => {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM users', (err, result) => {
-        if (err) throw err
+        if (err) reject(err)
         resolve(result)
       })
     })
   },
-  registerUser: (username, password=null, name) => {
+  registerUser: (username, password=null, email, name, socketId) => {
     return new Promise((resolve, reject) => {
-      connection.query('INSERT INTO users VALUES (null, ?, ?, ?)', [username, password, name],(err, result) => {
-        if (err) throw err
+      connection.query('INSERT INTO users VALUES (null, ?, ?, ?, ?, ?, null)', [username, password, email, name, socketId],(err, result) => {
+        if (err) reject(err)
         resolve(result)
       })
     })
@@ -32,7 +20,7 @@ const Users = {
   getUser: (username) => {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM users WHERE username = ?', [username], (err, result) => {
-        if (err) throw err
+        if (err) reject(err)
         resolve(result)
       })
     })
@@ -40,7 +28,7 @@ const Users = {
   getUserById: (id) => {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM users WHERE id = ?', [id], (err, result) => {
-        if (err) throw err
+        if (err) reject(err)
         resolve(result)
       })
     })
@@ -48,7 +36,7 @@ const Users = {
   deleteUser: (id) => {
     return new Promise((resolve, reject) => {
       connection.query('DELETE FROM user WHERE id = ?', [id], (err, result) => {
-        if (err) throw err
+        if (err) reject(err)
         resolve(result)
       })
     })
@@ -56,7 +44,7 @@ const Users = {
   setActiveUser(socketId, userId) {
     return new Promise((resolve, reject) => {
       connection.query('UPDATE users SET socket_id= ? WHERE id = ?', [socketId, userId], (err, result) => {
-        if (err) throw err
+        if (err) reject(err)
         resolve(result)
       })
     })
@@ -64,7 +52,16 @@ const Users = {
   removeSocketId(socketId) {
     return new Promise((resolve, reject) => {
       connection.query('UPDATE users SET socket_id=null WHERE socket_id=?', [socketId], (err, result) => {
-        if (err) throw err
+        if (err) reject(err)
+        resolve(result)
+      })
+    })
+  },
+  setEmailStatus(status) {
+    return new Promise((resolve, reject) => {
+      const sql = 'UPDATE users SET email_status = ?'
+      connection.query(sql, [status], (err, result) => {
+        if (err) reject(err)
         resolve(result)
       })
     })

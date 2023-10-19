@@ -1,9 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .fixed-h-full-window {
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
+  }
+  .flex-center-start {
+    @apply flex justify-center items-start;
+  }
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  /*color-scheme: light dark;*/
   color: rgba(255, 255, 255, 0.87);
   /*background-color: #242424;*/
 
@@ -13,26 +28,24 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  @apply m-0 p-0 box-border;
 }
 
 body {
-  background-color: #242424;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  place-items: center;
-  max-height: 100vh;
-  color: white;
+  @apply m-0 p-0 flex max-h-[100vh] text-white bg-lighten-dark place-items-center;
+}
+
+input {
+  background-color: #3b3b3b;
+  @apply text-white;
 }
 
 a {
+  text-decoration: inherit;
   font-weight: 500;
   color: #646cff;
-  text-decoration: inherit;
 }
 a:hover {
   color: #535bf2;
@@ -43,14 +56,15 @@ h1 {
   line-height: 1.1;
 }
 
+form {
+  @apply w-full
+}
 button {
-  outline: none;
-  border: none;
   border-radius: 6px;
   padding: .6em 1em;
   font-size: 18px;
   letter-spacing: .02em;
-  background-color: #1a1a1a;
+  @apply border-none outline-none w-full bg-default-dark;
 }
 button:hover {
   border-color: #646cff;
@@ -61,12 +75,11 @@ button:focus-visible {
 }
 
 input {
-  outline: none;
-  border: none;
   border-radius: 6px;
   padding: .6em 1em;
   font-size: 18px;
   letter-spacing: .01em;
+  @apply outline-none border-none
 }
 
 .card {
@@ -75,22 +88,21 @@ input {
 
 #app {
   max-width: 1280px;
-  margin: 0 auto;
-  text-align: center;
+  @apply mx-auto text-center
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
+/*@media (prefers-color-scheme: light) {*/
+/*  :root {*/
+/*    color: #213547;*/
+/*    @apply bg-white;*/
+/*  }*/
+/*  a:hover {*/
+/*    color: #747bff;*/
+/*  }*/
+/*  button {*/
+/*    background-color: #f9f9f9;*/
+/*  }*/
+/*}*/
 
 * {
   scrollbar-width: thin; /* Firefox */
@@ -107,4 +119,9 @@ input {
 
 *::-webkit-scrollbar-thumb:hover {
   background: #555; /* WebKit */
+}
+
+.input-wrapper {
+  margin: 14px 0;
+  @apply flex flex-col items-start;
 }
