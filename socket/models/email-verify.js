@@ -1,6 +1,6 @@
-const connection = require("./connection")
+import connection from "./connection.js";
 
-const EmailVerify = {
+export default {
   getAll() {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM email_verification', (err, result) => {
@@ -38,5 +38,3 @@ const EmailVerify = {
     })
   }
 }
-
-module.exports = EmailVerify

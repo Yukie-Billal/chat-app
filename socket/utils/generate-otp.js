@@ -1,4 +1,4 @@
-const generateOtp = () => {
+export default () => {
   let OTP = ''
   const str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
   for (let i = 0; i < 12; i++) {
@@ -6,4 +6,3 @@ const generateOtp = () => {
   }
   return OTP
 }
-module.exports = generateOtp

@@ -1,6 +1,6 @@
-const connection = require('./connection')
+import connection from "./connection.js"
 
-const Users = {
+export default {
   getAllUsers: () => {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM users', (err, result) => {
@@ -67,5 +67,3 @@ const Users = {
     })
   }
 }
-
-module.exports = Users

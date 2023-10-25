@@ -37,10 +37,11 @@ const email = ref('')
 const username = ref('')
 const password = ref('')
 const confirmPassword = ref('')
+
 </script>
 
 <template>
-    <div id="auth-wrapper">
+    <div id="auth-wrapper" v-if="userStore.waitingVerify === false">
        <div v-if="'authError' in userStore" class="p-4 w-full bg-red-500 rounded">
          {{userStore.authError}}
        </div>
@@ -53,6 +54,9 @@ const confirmPassword = ref('')
        </form>
        <a style="cursor:pointer;" @click="reverseSubmit">{{linkText}}</a>
     </div>
+   <div v-if="userStore.waitingVerify & userStore.isVerify === false" class="h-full w-full flex justify-center items-center">
+      <h1>Waiting verify</h1>
+   </div>
 </template>
 
 <style scoped>

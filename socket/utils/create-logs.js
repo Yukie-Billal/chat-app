@@ -1,6 +1,6 @@
-const fs = require('fs')
+import fs from "fs"
 const logPath = './log/log.txt'
-const create_log = (message) => {
+export const create_log = (message) => {
   try {
     console.log(fs.existsSync(logPath))
     console.log(fs.readFileSync(logPath))
@@ -14,4 +14,3 @@ const create_log = (message) => {
     console.log(e)
   }
 }
-module.exports = create_log
