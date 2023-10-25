@@ -1,10 +1,10 @@
-const express = require('express')
-const router = express.Router()
-const UserModel = require('../models/user')
-const EmailVerifyModel = require('../models/email-verify')
+import {Router} from 'express'
+import UserModel from '../models/user.js'
+import EmailVerifyModel from '../models/email-verify.js'
+const router = Router()
 
-const create_log = require("../utils/create-logs");
-const sendMailVerify = require("../utils/send-mail-verify");
+import {create_log} from "../utils/create-logs.js";
+import {sendMailVerify} from "../utils/send-mail-verify.js";
 
 router.get('/', async (req, res) => {
   try {
@@ -83,4 +83,4 @@ router.get('/mail/verify/:email/:otp', async (req, res) => {
   }
 })
 
-module.exports = router
+export default router

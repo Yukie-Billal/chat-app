@@ -1,8 +1,8 @@
-const generateOTP = require("./generate-otp");
-const {createEmailVerify} = require("../models/email-verify");
-const sendMailVerify = async (req, email) => {
-  const OTP = generateOTP()
-  const emailVerify = await createEmailVerify(email, OTP, req.ip, new Date())
+import generateOtp from "./generate-otp.js";
+import emailVerify from "../models/email-verify.js";
+export const sendMailVerify = async (req, email) => {
+  const OTP = generateOtp()
+  const emailVerify = await emailVerify.createEmailVerify(email, OTP, req.ip, new Date())
   const mailPayload = {to: `${email}`, subject: 'Email verification' + `To: ${email}`, otp: OTP}
   await sendRequest({
     method: 'POST',
@@ -20,5 +20,3 @@ async function sendRequest(option) {
         console.log("Err dimana fetch:", err)
       })
 }
-
-module.exports = sendMailVerify

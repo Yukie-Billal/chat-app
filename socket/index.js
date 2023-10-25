@@ -1,9 +1,9 @@
-const express = require('express')
-const {Server} = require('socket.io')
-const http = require('http')
-const cors = require('cors')
-const bodyParser = require("body-parser");
-const fs = require('fs')
+import express from 'express'
+import {Server} from 'socket.io'
+import http from 'http'
+import cors from 'cors'
+import bodyParser from "body-parser"
+import fs from 'fs'
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
@@ -15,7 +15,7 @@ const io = new Server(server, {
 const PORT = 3000
 const HOST = '0.0.0.0'
 
-const UserRouter = require('./routes/user')
+import UserRouter from './routes/user.js'
 
 const corsOptions = {
   origin: 'http://192.168.18.90:5173',  // Ganti dengan domain yang diizinkan
@@ -33,7 +33,8 @@ app.use('/users', UserRouter)
 
 
 const connectedUser = new Set()
-const UsersModel = require('./models/user')
+import UserModel from './models/user.js'
+import {create_log} from "./utils/create-logs.js";
 
 const dirPath = './log/'
 if (!fs.existsSync(dirPath)) {
@@ -43,8 +44,6 @@ const filePath = dirPath + 'log.txt'
 if (!fs.existsSync(filePath)) {
   fs.writeFileSync(filePath, '', 'utf-8')
 }
-
-const create_log = require("./utils/create-logs");
 
 io.on('connection', (socket) => {
   console.log('a client connected id: '+socket.id)
@@ -61,7 +60,7 @@ io.on('connection', (socket) => {
         userid: 0
       }
       io.emit('chat message', chat)
-      await UsersModel.setActiveUser(socket.id, user.id)
+      await UserModel.setActiveUser(socket.id, user.id)
       io.emit('online user')
       return false
     } catch (e) {
@@ -73,7 +72,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     try {
       console.log(socket.id)
-      await UsersModel.removeSocketId(socket.id)
+      await UserModel.removeSocketId(socket.id)
       io.emit('online user')
       console.log('A client disconnected.\n');
     } catch (e) {
