@@ -35,6 +35,7 @@ app.use('/users', UserRouter)
 const connectedUser = new Set()
 import UserModel from './models/user.js'
 import {create_log} from "./utils/create-logs.js";
+import axios from "axios";
 
 const dirPath = './log/'
 if (!fs.existsSync(dirPath)) {

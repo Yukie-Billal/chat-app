@@ -13,6 +13,10 @@ config()
 
 app.use(cors())
 app.use(bodyParser.json())
+app.use((req, res, next)=>{
+    console.log("Receive a request")
+    next()
+})
 const transporter = nodemailer.createTransport({
     port: parseInt(process.env.MAIL_PORT),
     host: process.env.MAIL_HOST,
