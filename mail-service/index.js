@@ -25,29 +25,27 @@ const transporter = nodemailer.createTransport({
 // #endregion
 
 // #region endpoint api
-app.get('/test-service', (req, res) => {
-    res.json({"message": "Testing service email"})
-})
-
+app.get('/', (req, res)=>res.json({message: "Hello world"}))
 app.post('/mails/send-verify', (req, res) => {
-    const {to, otp} = req.body
-    const mailData = {
-        from: process.env.MAIL_USER,
-        to: to,
-        subject: 'Verification Register Chat app',
-        text: `http://192.168.18.90:3000/users/mail/verify/${to}/${otp}`,
-        html: `<a href="http://192.168.18.90:3000/users/mail/verify/${to}/${otp}">Verify your chat app account gmail</a>`
-    }
-    let message = ''
-    transporter.sendMail(mailData, (err, info) => {
-        message += 'Hello '
-        console.log(err, info, "IIIIIIINNNNN", message)
-        if (err) {
-            console.log(err)
-            res.json({error: err})
+    console.log("\n\nBerhasil menerima request kirim email\n")
+    try {
+        const {to, otp} = req.body
+        const mailData = {
+            from: process.env.MAIL_USER,
+            to: to,
+            subject: 'Verification Register Chat app',
+            text: `http://localhost:3000/users/mail/verify/${to}/${otp}`,
+            html: `<a href="http://localhost:3000/users/mail/verify/${to}/${otp}">Verify your chat app account gmail</a>`
         }
-    })
-    res.send(message + "World")
+        let message = ''
+        transporter.sendMail(mailData, (err, info) => {
+            // console.log(err, info, "IIIIIIINNNNN", message)
+            if (err) throw err
+        })
+        res.json({result: 'succcess'})
+    } catch (e) {
+        res.json({error: e.message})
+    }
 })
 
 app.listen(parseInt(process.env.PORT), process.env.HOSTNAME, () => {

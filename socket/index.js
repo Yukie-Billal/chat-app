@@ -6,7 +6,7 @@ import bodyParser from "body-parser"
 import fs from 'fs'
 const app = express()
 const server = http.createServer(app)
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: {
     origin: '*'
   }
@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
     io.emit('chat message', chat)
   })
 
-  socket.on('join chat', async (user) => {
+  socket.on('join chat', async user => {
     try {
       const chat = {
         id: Math.floor(Math.random() * 20),
@@ -62,12 +62,12 @@ io.on('connection', (socket) => {
       io.emit('chat message', chat)
       await UserModel.setActiveUser(socket.id, user.id)
       io.emit('online user')
-      return false
     } catch (e) {
       console.log(e)
       create_log(new Date() + " :" + e)
     }
   })
+
 
   socket.on('disconnect', async () => {
     try {

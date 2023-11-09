@@ -4,6 +4,7 @@ import {ref} from "vue";
 import {extractWords} from "../../utils/string-escape.js"
 import LoginInput from "./LoginInput.vue"
 import {useUserStore} from "../../stores/user.js"
+import {socket} from "../../stores/socket.js";
 const userStore = useUserStore()
 
 const haveAccount = ref(true)
@@ -38,6 +39,9 @@ const username = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 
+socket.on('verify-user', email => {
+   if (email === userStore.user.email) userStore.verifyAccount()
+})
 </script>
 
 <template>

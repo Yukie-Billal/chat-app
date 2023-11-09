@@ -29,9 +29,7 @@ const actions = {
   },
   async doAuth(username, password, confirmPassword, email, haveAccount) {
     delete this.authError
-    if (username.length < 3) {
-      throw new Error('Invalid username')
-    }
+    if (username.length < 3) throw new Error('Invalid username')
     if (!haveAccount && (password.length < 4 || confirmPassword.length < 4)) throw new Error("Invalid Password minimum char: 4")
     if (!haveAccount && password !== confirmPassword) {
       alert('Password not match: ' + `${password}:${confirmPassword}`)
@@ -67,7 +65,7 @@ const actions = {
     this.isRegistered = true
     this.user = data[0]
     socket.emit('join chat', this.user)
-    this.verifyAccount()
+    // this.verifyAccount()
   }
 }
 
