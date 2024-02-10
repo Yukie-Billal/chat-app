@@ -10,7 +10,7 @@ const userStore = useUserStore()
 </script>
 
 <template>
-   <div id="chat" v-if="userStore.isRegistered" class="w-full md:w-[30vw] h-full">
+   <div id="chat" v-if="userStore.isRegistered & userStore.isVerify" class="w-full md:w-[30vw] h-full">
       <ChatContent />
       <ChatInput />
       <user-list />

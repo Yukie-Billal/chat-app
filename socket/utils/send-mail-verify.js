@@ -1,19 +1,21 @@
 import generateOtp from "./generate-otp.js";
-import emailVerify from "../models/email-verify.js";
+import emailVerify from "../models/email-verify.js"
+
 export const sendMailVerify = async (req, email) => {
+  console.log('\nIni adalah endpoint kirim email\n')
   const OTP = generateOtp()
-  const emailVerify = await emailVerify.createEmailVerify(email, OTP, req.ip, new Date())
+  const resutlEmailVerify = await emailVerify.createEmailVerify(email, OTP, req.ip, new Date())
   const mailPayload = {to: `${email}`, subject: 'Email verification' + `To: ${email}`, otp: OTP}
-  await sendRequest({
+  sendRequest({
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(mailPayload)
   })
-  return {emailVerify}
+  return {resutlEmailVerify}
 }
 
-async function sendRequest(option) {
-  await fetch('http://192.168.18.90:5000/mails/send-verify', option)
+function sendRequest(option) {
+  fetch('http://127.0.0.1:5000/mails/send-verify', option)
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => {

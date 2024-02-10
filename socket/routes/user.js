@@ -5,6 +5,7 @@ const router = Router()
 
 import {create_log} from "../utils/create-logs.js";
 import {sendMailVerify} from "../utils/send-mail-verify.js";
+import {io} from "../index.js";
 
 router.get('/', async (req, res) => {
   try {
@@ -66,19 +67,20 @@ router.delete('/:id', async (req, res) => {
 
 router.get('/mail/verify/:email/:otp', async (req, res) => {
   try {
-    console.log("\nVerifikasi email berhasil digapai\n")
     const {email, otp} = req.params
     const checkEmail = await EmailVerifyModel.getByEmail(email)
     if (checkEmail[0].email === email && checkEmail[0].otp_password === otp) {
       await EmailVerifyModel.deleteEmailVerify(otp)
       await UserModel.setEmailStatus('verify')
+      console.log('INI EMAIL VERIFY')
+      io.emit('verify-user', email)
       res.json({message: "Success"})
     } else {
       res.json({message: "Failed"})
     }
   } catch (e) {
     console.log(e)
-    create_log(new Date() + " :" + e)
+    create_log(new Date() + " : " + e)
     res.status(500).json({message: e.message})
   }
 })

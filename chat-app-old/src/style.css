@@ -123,5 +123,6 @@ input {
 
 .input-wrapper {
   margin: 14px 0;
+  background-color: ivory;
   @apply flex flex-col items-start;
 }
