@@ -14,7 +14,6 @@ config()
 app.use(cors())
 app.use(bodyParser.json())
 app.use((req, res, next)=>{
-    console.log("Receive a request")
     next()
 })
 const transporter = nodemailer.createTransport({
@@ -31,7 +30,6 @@ const transporter = nodemailer.createTransport({
 // #region endpoint api
 app.get('/', (req, res)=>res.json({message: "Hello world"}))
 app.post('/mails/send-verify', (req, res) => {
-    console.log("\n\nBerhasil menerima request kirim email\n")
     try {
         const {to, otp} = req.body
         const mailData = {
@@ -41,9 +39,7 @@ app.post('/mails/send-verify', (req, res) => {
             text: `http://localhost:3000/users/mail/verify/${to}/${otp}`,
             html: `<a href="http://localhost:3000/users/mail/verify/${to}/${otp}">Verify your chat app account gmail</a>`
         }
-        let message = ''
         transporter.sendMail(mailData, (err, info) => {
-            // console.log(err, info, "IIIIIIINNNNN", message)
             if (err) throw err
         })
         res.json({result: 'succcess'})
