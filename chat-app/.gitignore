@@ -17,8 +17,16 @@ logs
 .DS_Store
 .fleet
 .idea
+.vscode
 
 # Local env files
 .env
 .env.*
 !.env.example
+
+# other
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
