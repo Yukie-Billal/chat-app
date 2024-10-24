@@ -1,12 +1,6 @@
-<div align="center">
- <h1>Application under migration</h1>  
-</div>
-
-
-
 # chat-app
-Web chat application
-Open source application. for realtime chat in discussion for technology or progamming.
+Web simple realtime chat application
+
 
 ## Tech stack
 ### Front end. vite + vuejs 3
@@ -21,11 +15,6 @@ nodejs + Expressjs
 ### architecture 
 use layered architecture
 
-
-## Contributing
-### Requirements
-- Nodejs include npm
-- Vuejs - use vite
 
 ### local development ecosystem
 1. Config app url
