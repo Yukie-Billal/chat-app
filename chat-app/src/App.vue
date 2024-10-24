@@ -7,17 +7,16 @@ import ChatContent from "./components/chat/ChatContent.vue"
 
 import {useUserStore} from "./stores/user.js"
 const userStore = useUserStore()
-
-console.log(userStore.isRegistered);
-console.log(userStore.isVerify);
 </script>
 
 <template>
-   <div id="chat" v-if="userStore.isRegistered" class="w-full md:w-[30vw] h-full">
-      <ChatContent />
-      <ChatInput />
-      <user-list />
+   <div class="">
+      <div id="chat" v-if="userStore.isRegistered" class="w-[70dvw] lg:w-[50dvw] xl:w-[30dvw] h-full">
+         <ChatContent />
+         <ChatInput />
+         <user-list />
+      </div>
+      <Login v-else />
+      <AudioNotification />
    </div>
-   <Login v-else />
-   <AudioNotification />
 </template>

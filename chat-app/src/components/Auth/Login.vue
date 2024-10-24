@@ -4,7 +4,7 @@ import {ref} from "vue";
 import {extractWords} from "../../utils/string-escape.js"
 import LoginInput from "./LoginInput.vue"
 import {useUserStore} from "../../stores/user.js"
-import {socket} from "../../stores/socket.js";
+import {socket} from "../../stores/socket.js"
 const userStore = useUserStore()
 
 const haveAccount = ref(true)

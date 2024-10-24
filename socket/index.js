@@ -1,5 +1,5 @@
 import express from 'express'
-import {Server} from 'socket.io'
+import { Server } from 'socket.io'
 import http from 'http'
 import cors from 'cors'
 import bodyParser from "body-parser"
@@ -34,8 +34,6 @@ app.use('/users', UserRouter)
 
 const connectedUser = new Set()
 import UserModel from './models/user.js'
-import {create_log} from "./utils/create-logs.js";
-import axios from "axios";
 
 const dirPath = './log/'
 if (!fs.existsSync(dirPath)) {
@@ -47,7 +45,7 @@ if (!fs.existsSync(filePath)) {
 }
 
 io.on('connection', (socket) => {
-  console.log('a client connected id: '+socket.id)
+  console.log('a client connected id: ' + socket.id)
   connectedUser.add(socket.id)
   socket.on('chat message', (chat) => {
     io.emit('chat message', chat)
@@ -65,7 +63,6 @@ io.on('connection', (socket) => {
       io.emit('online user')
     } catch (e) {
       console.log(e)
-      create_log(new Date() + " :" + e)
     }
   })
 
@@ -78,7 +75,6 @@ io.on('connection', (socket) => {
       console.log('A client disconnected.\n');
     } catch (e) {
       console.log(e)
-      create_log(new Date() + " :" + e)
     }
   });
 })

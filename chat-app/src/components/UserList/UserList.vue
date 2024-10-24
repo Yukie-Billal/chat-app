@@ -6,7 +6,7 @@ const userStore = useUserStore()
 </script>
 
 <template>
-   <div id="user-list" class="hidden md:inline-block">
+   <div id="user-list" class="hidden lg:inline-block">
       <ul v-for="(user, i) in userStore.users" :key="user.id || i" class="user-list-wrapper">
          <UserListItem :user="user" />
       </ul>

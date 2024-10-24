@@ -3,7 +3,7 @@ import UserModel from '../models/user.js'
 import EmailVerifyModel from '../models/email-verify.js'
 const router = Router()
 
-import {create_log} from "../utils/create-logs.js";
+
 import {sendMailVerify} from "../utils/send-mail-verify.js";
 import {io} from "../index.js";
 
@@ -13,7 +13,6 @@ router.get('/', async (req, res) => {
     res.json(user)
   } catch (e) {
     console.log(e)
-    create_log(new Date() + " :" + e)
     res.status(500).json({message: e.message})
   }
 })
@@ -32,7 +31,6 @@ router.post('/', async (req, res) => {
     }
   } catch (e) {
     console.log(e)
-    create_log(new Date() + " :" + e)
     res.status(500).json({message: e.message})
   }
 })
@@ -48,7 +46,6 @@ router.post('/auth', async (req, res) => {
     }
   } catch (e) {
     console.log(e)
-    create_log(new Date() + " :" + e)
     res.status(500).json({message: e.message})
   }
 })
@@ -60,7 +57,6 @@ router.delete('/:id', async (req, res) => {
     res.json(user)
   } catch (e) {
     console.log(e)
-    create_log(new Date() + " :" + e)
     res.status(500).json({message: e.message})
   }
 })
@@ -80,7 +76,6 @@ router.get('/mail/verify/:email/:otp', async (req, res) => {
     }
   } catch (e) {
     console.log(e)
-    create_log(new Date() + " : " + e)
     res.status(500).json({message: e.message})
   }
 })
