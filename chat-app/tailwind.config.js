@@ -1,14 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-     "./components/**/*.{js,vue,ts}",
-     "./layouts/**/*.{js,vue,ts}",
-     "./pages/**/*.{js,vue,ts}",
-     "./plugins/**/*.{js,vue,ts}",
-     "./error.vue",
-  ],
+  content: ['./index.html', './**/*.{vue,js,html}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "default-dark": "#1a1a1a",
+        "lighten-dark": "#242424"
+      }
+    },
   },
   plugins: [],
 }
