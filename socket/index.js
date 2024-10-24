@@ -17,10 +17,7 @@ const HOST = '0.0.0.0'
 
 import UserRouter from './routes/user.js'
 
-const corsOptions = {
-  origin: 'http://192.168.18.90:5173',  // Ganti dengan domain yang diizinkan
-  optionsSuccessStatus: 200
-};
+
 app.use(cors())
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
