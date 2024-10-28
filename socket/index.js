@@ -2,7 +2,6 @@ import express from 'express'
 import { Server } from 'socket.io'
 import http from 'http'
 import cors from 'cors'
-import bodyParser from "body-parser"
 import fs from 'fs'
 const app = express()
 const server = http.createServer(app)
@@ -12,7 +11,7 @@ export const io = new Server(server, {
   }
 })
 
-const PORT = 3000
+const PORT = 5000
 const HOST = '0.0.0.0'
 
 import UserRouter from './routes/user.js'
@@ -25,9 +24,8 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
-app.use(bodyParser.json())
+app.use(express.json({ limit: '3mb' }))
 app.use('/users', UserRouter)
-
 
 const connectedUser = new Set()
 import UserModel from './models/user.js'
@@ -52,7 +50,7 @@ io.on('connection', (socket) => {
     try {
       const chat = {
         id: Math.floor(Math.random() * 20),
-        chat: `${user.username} has joined chat`,
+        chat: `${user.username} join the chat`,
         userid: 0
       }
       io.emit('chat message', chat)

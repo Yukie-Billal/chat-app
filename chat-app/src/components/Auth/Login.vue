@@ -5,6 +5,7 @@ import {extractWords} from "../../utils/string-escape.js"
 import LoginInput from "./LoginInput.vue"
 import {useUserStore} from "../../stores/user.js"
 import {socket} from "../../stores/socket.js"
+import { requestPermission } from '../../utils/notification.js';
 const userStore = useUserStore()
 
 const haveAccount = ref(true)
@@ -25,6 +26,7 @@ async function handleSubmit (e) {
    e.preventDefault()
    try {
       if (email.value.length < 5) throw new Error("Invalid email")
+      requestPermission()
       await userStore.doAuth(extractWords(username.value), password.value, confirmPassword.value, email.value, haveAccount.value)
    } catch (e) {
       console.log(e)
