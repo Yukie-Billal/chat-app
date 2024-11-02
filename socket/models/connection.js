@@ -1,9 +1,11 @@
 import mysql from 'mysql2'
+import { DB_HOST, DB_NAME, DB_PASS, DB_USER } from '../src/config/constant.js'
+
 const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "YukieBillal",
-  database: "chat-app"
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASS,
+  database: DB_NAME,
 })
 
 connection.connect(err => {
