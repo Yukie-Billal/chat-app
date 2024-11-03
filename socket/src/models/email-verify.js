@@ -1,4 +1,4 @@
-import connection from "./connection.js";
+import connection from "../config/database.js"
 
 export default {
   getAll() {

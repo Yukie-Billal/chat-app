@@ -4,7 +4,7 @@ import EmailVerifyModel from '../models/email-verify.js'
 const router = Router()
 
 
-import {sendMailVerify} from "../utils/send-mail-verify.js";
+import {sendMailVerify} from "../utils/send-mail-verify.js"
 import {io} from "../index.js";
 
 router.get('/', async (req, res) => {

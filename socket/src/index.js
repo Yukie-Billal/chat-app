@@ -26,7 +26,7 @@ app.use('/users', UserRouter)
 
 const connectedUser = new Set()
 import UserModel from './models/user.js'
-import { APP_HOST, APP_PORT } from './src/config/constant.js'
+import { APP_HOST, APP_PORT } from './config/constant.js'
 
 const dirPath = './log/'
 if (!fs.existsSync(dirPath)) {
@@ -75,3 +75,5 @@ io.on('connection', (socket) => {
 server.listen(APP_PORT, APP_HOST, () => {
   console.log(`Aplikasi berjalan di ${APP_HOST}:${APP_PORT}`)
 })
+
+export default server;

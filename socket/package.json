@@ -2,11 +2,11 @@
   "name": "socket",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.cjs",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
+    "dev": "nodemon server.cjs",
+    "start": "node server.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

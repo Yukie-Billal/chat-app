@@ -1,4 +1,4 @@
-import generateOtp from "./generate-otp.js";
+import generateOtp from "./generate-otp.js"
 import emailVerify from "../models/email-verify.js"
 
 export const sendMailVerify = async (req, email) => {
