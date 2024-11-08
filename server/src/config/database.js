@@ -1,5 +1,5 @@
 import mysql from "mysql2"
-import { DB_HOST, DB_NAME, DB_PASS, DB_USER } from '../config/constant.js'
+import { DB_HOST, DB_NAME, DB_PASS, DB_USER } from './constant.js'
 
 const connection = mysql.createConnection({
    host: DB_HOST,
